@@ -1,0 +1,2 @@
+# spring-boot-application-runner-practice
+Spring BootのApplicationRunnerインタフェースを活用したバッチアプリケーション構築練習
