@@ -6,7 +6,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * コンポーネント探索と自動設定を有効にする、コンソールアプリケーションのエントリーポイントです。
+ * {@link SpringBootApplication} はコンポーネント探索と自動設定をまとめて有効にするため、
+ * RunnerをBeanとして登録し、ApplicationContextを初期化できるエントリーポイントです。
  */
 @SpringBootApplication
 public class ApplicationRunnerPracticeApplication {

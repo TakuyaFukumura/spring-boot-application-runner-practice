@@ -16,4 +16,18 @@ class CommandLineArgumentsProcessorTest {
 
         assertThrows(IllegalArgumentException.class, () -> processor.process(arguments));
     }
+
+    @Test
+    void acceptsNameVerboseAndNonOptionArguments() {
+        ApplicationArguments arguments = new DefaultApplicationArguments("--name=Taro", "--verbose", "input.txt");
+
+        processor.process(arguments);
+    }
+
+    @Test
+    void usesDefaultNameWhenNameIsNotSpecified() {
+        ApplicationArguments arguments = new DefaultApplicationArguments();
+
+        processor.process(arguments);
+    }
 }
