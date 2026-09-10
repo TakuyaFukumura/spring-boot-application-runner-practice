@@ -12,7 +12,7 @@ Spring BootのApplicationRunnerインタフェースを活用したバッチア�
 Java 25を用意し、次のコマンドを実行します。Maven WrapperがMavenを自動取得するため、Mavenの個別インストールは不要です。
 
 ```powershell
-.\mvnw.cmd spring-boot:run -Dspring-boot.run.arguments="--name=Taro --verbose input.txt"
+.\mvnw.cmd spring-boot:run "-Dspring-boot.run.arguments=--name=Taro --verbose input.txt"
 ```
 
 正常終了時は処理結果がログに出力され、処理完了後にプロセスが終了します。引数が不正な場合はエラーで起動に失敗し、プロセスの終了コードは1です。
@@ -37,7 +37,7 @@ INFO ... CommandLineArgumentsProcessor : name=Taro, verbose=true, nonOptionArgs=
 引数エラーの確認:
 
 ```powershell
-.\mvnw.cmd spring-boot:run -Dspring-boot.run.arguments="--name="
+.\mvnw.cmd spring-boot:run "-Dspring-boot.run.arguments=--name="
 ```
 
 ## 学習ポイント
