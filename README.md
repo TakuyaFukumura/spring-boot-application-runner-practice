@@ -38,3 +38,6 @@ Runner テストを含みます。JAR の起動確認は上記コマンドで生
 
 GitHub Actions でも、`main` への push と Pull Request を対象に Java 25 で
 `mvnw verify` を実行します。
+
+依存関係と GitHub Actions の更新は Dependabot が定期的に Pull Request を作成します。
+設定は `.github/dependabot.yml` にあります。
