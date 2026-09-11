@@ -1,50 +1,37 @@
 # spring-boot-application-runner-practice
-Spring BootのApplicationRunnerインタフェースを活用したバッチアプリケーション構築練習
 
-## 概要
-
-このプロジェクトは、Spring Bootの`ApplicationRunner`を使い、ApplicationContextの初期化完了後に処理を1回だけ実行する流れを学ぶためのコンソールアプリケーションです。
-
-`--name=Taro`、`--verbose`、非オプション引数を読み取り、引数処理サービスへ委譲します。`--name`に空の値を指定した場合は`IllegalArgumentException`となり、起動失敗として扱います。
+Spring Boot の `ApplicationRunner` と DDD の基本構造を学ぶコンソールアプリケーションです。
 
 ## 実行
 
-Java 25を用意し、次のコマンドを実行します。Maven WrapperがMavenを自動取得するため、Mavenの個別インストールは不要です。
+Java 25 と Maven Wrapper を使用します。
 
 ```powershell
-.\mvnw.cmd spring-boot:run "-Dspring-boot.run.arguments=--name=Taro --verbose input.txt"
+.\mvnw.cmd spring-boot:run "-Dspring-boot.run.arguments=register --order-id=1001 --product=Book --quantity=2"
+.\mvnw.cmd spring-boot:run "-Dspring-boot.run.arguments=list"
 ```
 
-正常終了時は処理結果がログに出力され、処理完了後にプロセスが終了します。引数が不正な場合はエラーで起動に失敗し、プロセスの終了コードは1です。
+登録結果と一覧は標準出力、診断情報とエラーはログへ出力します。注文がない場合は
+`注文はありません。` と表示されます。不正入力や重複登録は終了コード 1、正常終了は 0 です。
 
-パッケージ化したJARを実行する場合は、次のコマンドを実行します。
+## 構成と学習ポイント
+
+* `presentation`: `ApplicationArguments` をコマンド DTO へ変換し、`ApplicationRunner` を起動する。
+  `StartupOrderRunner` は `@Order(1)`、注文 Runner は `@Order(2)` で既存の実行順学習を維持する。
+* `application`: register/list の手順、コマンド DTO、出力 DTO を担当する。
+* `domain`: `Order` 集約、`OrderId`・`ProductName`・`Quantity`・`OrderLine` と
+  `OrderRepository` 抽象を提供する。Spring や CLI には依存しない。
+* `infrastructure`: `OrderRepository` のプロセス内インメモリ実装を提供する。
+
+注文 ID・商品名は空値不可、数量は 1 以上、明細は 1 注文 1 件です。同じ ID の登録は
+`DuplicateOrderException` になります。コードリーディングの順序と依存方向は
+`docs/コードリーディング補助資料.md` を参照してください。
+
+## 検証
 
 ```powershell
-.\mvnw.cmd clean package
-java -jar target\application-runner-practice-0.1.0.jar --name=Taro --verbose input.txt
+.\mvnw.cmd clean verify
 ```
 
-期待されるログの例:
-
-```text
-INFO ... StartupOrderRunner : startup order step=1
-INFO ... CommandLineArgumentsProcessor : name=Taro, verbose=true, nonOptionArgs=[input.txt]
-```
-
-`StartupOrderRunner` に `@Order(1)`、`CommandLineArgumentsRunner` に `@Order(2)` を付けているため、
-複数のRunnerを登録した場合も実行順序を明示できます。Runnerが1つだけなら順序指定は不要です。
-
-引数エラーの確認:
-
-```powershell
-.\mvnw.cmd spring-boot:run "-Dspring-boot.run.arguments=--name="
-```
-
-## 学習ポイント
-
-- `CommandLineArgumentsRunner`は`ApplicationRunner`を実装し、Spring Beanとして登録されています。
-- `run(ApplicationArguments args)`はApplicationContextの初期化完了後に呼び出されます。
-- `containsOption`、`getOptionValues`、`getNonOptionArgs`で、オプションの有無・値・非オプション引数を取得できます。
-- `CommandLineArgumentsProcessor`へ処理を委譲することで、Runnerの起動タイミングと引数処理を分離しています。
-- `@Order`により、起動ログの順序制御を確認できます。
-- 起動テストでは、プロセッサーが1回だけ呼び出されることを確認しています。
+要件定義書の受け入れ基準は実装済みで、Domain/Application 単体テストと Spring Context
+Runner テストを含みます。JAR の起動確認は上記コマンドで生成した JAR に対しても実施できます。
