@@ -14,7 +14,7 @@ public class ApplicationRunnerPracticeApplication {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationRunnerPracticeApplication.class);
 
-    static void main(String[] args) {
+    public static void main(String[] args) {
         try {
             var context = SpringApplication.run(ApplicationRunnerPracticeApplication.class, args);
             System.exit(SpringApplication.exit(context));
