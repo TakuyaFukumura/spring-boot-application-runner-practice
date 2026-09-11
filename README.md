@@ -35,3 +35,6 @@ Java 25 と Maven Wrapper を使用します。
 
 要件定義書の受け入れ基準は実装済みで、Domain/Application 単体テストと Spring Context
 Runner テストを含みます。JAR の起動確認は上記コマンドで生成した JAR に対しても実施できます。
+
+GitHub Actions でも、`main` への push と Pull Request を対象に Java 25 で
+`mvnw verify` を実行します。
